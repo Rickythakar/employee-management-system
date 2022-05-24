@@ -63,11 +63,43 @@ function displayMenu() {
             exitDisplayMenu()
         });
 };
+//Runs the initial inquirer function that will prompt the user with a list of choices
 displayMenu();
+
+
 // View Roles Function
+// Basically console logging current roles
+// const viewRoles = 
+
+
+
 // View Departments Function
+// Basically console logging current departments
+// const viewDepartments =
+
+
+
 // View Employees Function
+// Basically console logging current employees
+// const viewEmployees =
+
+
+
 // Add Department Function
+// const addDepartment =
+// Use inquirer to add a department
+
 // Add Employee Function
+// Uses inquirer to add an employee
+// const addEmployee = 
+
+
+
 // Update Employee Role Function
+// Uses inquirer to update an employee role
+// const updateEmployeeRole = 
+
+
+
 // Exit Function
+// const exit = 
