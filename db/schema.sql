@@ -16,7 +16,7 @@ CREATE TABLE role(
 -- to hold role salary
     salary DECIMAL,
 -- to hold reference to department role belongs to
-    department_id INT,
+    department_id INT
 )
 CREATE TABLE employee (
     id INT PRIMARY KEY,
