@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
 const mysql = require('mysql2')
-const consoleTable = require('console.table')
+// const consoleTable = require('console.table')
 
 // Connect to database
 const db = mysql.createConnection(
@@ -33,7 +33,6 @@ function displayMenu() {
                     'Exit']
             }])
         .then((menuResponse) => {
-
             //View Departments
             if (menuResponse.menuChoice === 'View all departments') {
                 console.log("viewing all departments")
@@ -130,7 +129,10 @@ const addDepartment = () => {
 // Add Role Function
 // Uses inquirer to add a role
 const addRole = () => {
-    return inquirer
+    db.query("select * from department", function (error, results) {
+        console.log(results)
+        const departments = results
+        return inquirer
         .prompt([
             {
                 type: 'input',
@@ -143,16 +145,19 @@ const addRole = () => {
                 message: 'Please enter the salary amount:',
             },
             {
-                type: 'input',
+                type: 'list',
                 name: 'department',
                 message: 'What is the name of the department?',
-            },
+                choices: departments.map(department => department.name)
+            }
         ])
         .then((menuResponse) => {
-            menuResponse.departmentName
+            const [filteredDepartment] = departments.filter(department => department.name === menuResponse.department)
+            const departmentId = filteredDepartment.id
+            // flesh our INSERT INTO statment
             const sql = `INSERT INTO role (name)
         VALUES (?)`;
-            const params = [menuResponse.departmentName];
+            const params = [menuResponse.department];
             db.query(sql, params, (err, result) => {
                 if (err) {
                     console.log(err)
@@ -162,51 +167,61 @@ const addRole = () => {
                 viewDepartments();
             });
         })
+    })
+    
 }
 // Add Employee Function
 // Uses inquirer to add an employee
 const addEmployee = () => {
-    return inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'employeeFirstName',
-                message: 'What is the first name of the employee',
-            },
-            {
-                type: 'input',
-                name: 'employeeLastName',
-                message: 'What is the last name of the employee',
-            },
-            {
-                type: 'input',
-                name: 'employeeRole',
-                message: 'What is the role of the employee',
-            },
-            {
-                type: 'input',
-                name: 'employeeManager',
-                message: "What is the name of the employee's manager?",
-            }
-        ])
-        .then((menuResponse) => {
-            menuResponse.employeeName
-            const sql = `
-            INSERT INTO employee (first_name),
-            INSERT INTO employee (last_name),
-            INSERT INTO employee (role_id),
-            INSERT INTO employee (manager_id),
-        VALUES (?)`;
-            const params = [menuResponse.employeeFirstName, menuResponse.employeeLastName, menuResponse.employeeRole, menuResponse.employeeManager];
-            db.query(sql, params, (err, result) => {
-                if (err) {
-                    console.log(err)
-                    return;
-                }
-                console.log("Successfully added " + menuResponse.employeeFirstName + menuResponse.employeeLastName + " to employees")
-                viewEmployees();
-            });
-        })
+    // query the roles 
+    db.query("select * from role", function (error, results) {
+        console.log(results)
+        const roles = results
+        return inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'employeeFirstName',
+                    message: 'What is the first name of the employee',
+                },
+                {
+                    type: 'input',
+                    name: 'employeeLastName',
+                    message: 'What is the last name of the employee',
+                },
+                {
+                    // choices of the list will be an array of current roles
+                    type: 'list',
+                    name: 'employeeRole',
+                    message: 'What is the role of the employee',
+                    choices: roles.map(role => role.title)
+                },
+                // {
+                //     type: 'list',
+                //     name: 'employeeManager',
+                //     message: "What is the name of the employee's manager?",
+                //     choices: //list of employee managers
+                // }
+            ])
+            .then((menuResponse) => {
+                const [filteredRole] = roles.filter(role => role.title === menuResponse.employeeRole)
+                const employeeRoleId = filteredRole.id
+                // console.log(employeeRoleId);
+
+                const sql = `INSERT INTO employee (first_name,last_name,role_id) VALUES (?,?,?)`;
+                const params = [menuResponse.employeeFirstName, menuResponse.employeeLastName, employeeRoleId];
+                db.query(sql, params, (err, result) => {
+                    if (err) {
+                        console.log(err)
+                        return;
+                    }
+                    console.log("Successfully added " + menuResponse.employeeFirstName + menuResponse.employeeLastName + " to employees")
+                    viewEmployees();
+                });
+            })
+    })
+    //create a variable for employee managers
+
 }
 // // Update Employee Role Function
 // // Uses inquirer to update an employee role
