@@ -6,11 +6,12 @@ USE employeeManager_db;
 
 -- Creates the table "department" within employeeManager_db --
 CREATE TABLE department (
-    id int primary key,
+    id int primary key auto_increment,
     name VARCHAR(30) not null
 )
+
 CREATE TABLE role(
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY auto_increment,
 -- to hold role title
     title VARCHAR(30),
 -- to hold role salary
@@ -19,7 +20,7 @@ CREATE TABLE role(
     department_id INT
 )
 CREATE TABLE employee (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY auto_increment,
     -- to hold employee first name
     first_name VARCHAR(30), 
 --  to hold employee last name
