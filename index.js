@@ -2,7 +2,7 @@ const inquirer = require('inquirer')
 const mysql = require('mysql2')
 // const consoleTable = require('console.table')
 
-// Connect to database
+// Connect to database-----------------------------------------------------------------------------
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -14,7 +14,7 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the employeeManager_db database.`)
 );
-
+//-------------------------------------------------------------------------------------------------
 function displayMenu() {
     return inquirer
         .prompt([
@@ -70,11 +70,10 @@ function displayMenu() {
             }
         });
 };
-
 //Runs the initial inquirer function that will prompt the user with a list of choices
 displayMenu();
 
-// View Departments Function
+// View Departments Function-----------------------------------------------------------------------
 // Basically console logging current departments
 const viewDepartments = () =>
     db.query("select * from department", function (error, results) {
@@ -82,7 +81,7 @@ const viewDepartments = () =>
         console.table(results);
         displayMenu()
     })
-// View Roles Function
+// View Roles Function-----------------------------------------------------------------------------
 // Basically console logging current roles
 const viewRoles = () =>
     db.query("select * from role", function (error, results) {
@@ -90,16 +89,16 @@ const viewRoles = () =>
         console.table(results);
         displayMenu()
     })
-// View Employees Function
+// View Employees Function-------------------------------------------------------------------------
 // Basically console logging current employees
 const viewEmployees = () =>
-    db.query("select * from employee", function (error, results) {
+    db.query("select first_name, last_name, role_id from employee", function (error, results) {
         if (error) throw error;
         console.table(results);
         displayMenu()
     })
 
-// Add Department Function
+// Add Department Function ------------------------------------------------------------------------
 // Uses inquirer to add a department
 const addDepartment = () => {
     return inquirer
@@ -126,55 +125,54 @@ const addDepartment = () => {
         })
 }
 
-// Add Role Function
+// Add Role Function-------------------------------------------------------------------------------
 // Uses inquirer to add a role
 const addRole = () => {
     db.query("select * from department", function (error, results) {
         console.log(results)
         const departments = results
         return inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'name',
-                message: 'What is the name of the role?',
-            },
-            {
-                type: 'input',
-                name: 'salary',
-                message: 'Please enter the salary amount:',
-            },
-            {
-                type: 'list',
-                name: 'department',
-                message: 'What is the name of the department?',
-                choices: departments.map(department => department.name)
-            }
-        ])
-        .then((menuResponse) => {
-            const [filteredDepartment] = departments.filter(department => department.name === menuResponse.department)
-            const departmentId = filteredDepartment.id
-            // flesh our INSERT INTO statment
-            const sql = `INSERT INTO role (name)
-        VALUES (?)`;
-            const params = [menuResponse.department];
-            db.query(sql, params, (err, result) => {
-                if (err) {
-                    console.log(err)
-                    return;
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'title',
+                    message: 'What is the name of the role?',
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'Please enter the salary amount:',
+                },
+                {
+                    type: 'list',
+                    name: 'department',
+                    message: 'What is the name of the department?',
+                    choices: departments.map(department => department.name)
                 }
-                console.log("Successfully added " + menuResponse.name + " to roles")
-                viewDepartments();
-            });
-        })
+            ])
+            .then((menuResponse) => {
+                const [filteredDepartment] = departments.filter(department => department.name === menuResponse.department)
+                const departmentId = filteredDepartment.id
+                // flesh our INSERT INTO statment
+                const sql = `INSERT INTO role (title)
+        VALUES (?)`;
+                const params = [menuResponse.department];
+                db.query(sql, params, (err, result) => {
+                    if (err) {
+                        console.log(err)
+                        return;
+                    }
+                    console.log("Successfully added " + menuResponse.title + " to roles")
+                    viewDepartments();
+                });
+            })
     })
-    
 }
-// Add Employee Function
+// Add Employee Function---------------------------------------------------------------------------
 // Uses inquirer to add an employee
 const addEmployee = () => {
     // query the roles 
-    db.query("select * from role", function (error, results) {
+    db.query("select * from role", function (error, results){
         console.log(results)
         const roles = results
         return inquirer
@@ -200,13 +198,13 @@ const addEmployee = () => {
                 //     type: 'list',
                 //     name: 'employeeManager',
                 //     message: "What is the name of the employee's manager?",
-                //     choices: //list of employee managers
+                //     choices: employee.map(employee => employee.id)
                 // }
             ])
             .then((menuResponse) => {
                 const [filteredRole] = roles.filter(role => role.title === menuResponse.employeeRole)
                 const employeeRoleId = filteredRole.id
-                // console.log(employeeRoleId);
+                console.log(employeeRoleId);
 
                 const sql = `INSERT INTO employee (first_name,last_name,role_id) VALUES (?,?,?)`;
                 const params = [menuResponse.employeeFirstName, menuResponse.employeeLastName, employeeRoleId];
@@ -223,7 +221,7 @@ const addEmployee = () => {
     //create a variable for employee managers
 
 }
-// // Update Employee Role Function
+// // Update Employee Role Function----------------------------------------------------------------
 // // Uses inquirer to update an employee role
 const updateEmployeeRole = [
     //Select an employee
@@ -234,7 +232,7 @@ const updateEmployeeRole = [
         message: 'What is the new role of the employee? ',
     }
 ]
-// Exit Function - Exits Application
+// Exit Function - Exits Application---------------------------------------------------------------
 const exitDisplayMenu = () => {
     console.log("Exiting App")
     process.exit()
