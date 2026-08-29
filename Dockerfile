@@ -27,4 +27,4 @@ COPY --from=build --chown=workforce:workforce /app/dist ./dist
 COPY --chown=workforce:workforce db ./db
 
 USER workforce
-CMD ["node", "dist/cli.js"]
+CMD ["sh", "-c", "node dist/admin.js migrate && node dist/cli.js"]
