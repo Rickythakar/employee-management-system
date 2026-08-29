@@ -19,9 +19,11 @@
     "test:unit": "vitest run test/unit",
     "test:integration": "vitest run test/integration",
     "coverage": "vitest run --coverage",
+    "db:bootstrap": "tsx scripts/bootstrap.ts",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:health": "tsx scripts/health.ts",
+    "db:setup": "pnpm db:bootstrap && pnpm db:migrate && pnpm db:seed",
     "smoke": "tsx scripts/smoke.ts",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
