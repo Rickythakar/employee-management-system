@@ -35,7 +35,6 @@ CREATE TABLE employees (
   KEY idx_employees_role_id (role_id),
   KEY idx_employees_manager_id (manager_id),
   KEY idx_employees_name (last_name, first_name),
-  CONSTRAINT chk_employees_not_self_managed CHECK (manager_id IS NULL OR manager_id <> id),
   CONSTRAINT fk_employees_role
     FOREIGN KEY (role_id) REFERENCES roles (id)
     ON UPDATE CASCADE ON DELETE RESTRICT,

@@ -140,7 +140,7 @@ Integration tests require `RUN_INTEGRATION_TESTS=true` and the database variable
 - Strict TypeScript and a repository boundary keep SQL and user interaction isolated.
 - Credentials come only from environment configuration and are validated at startup.
 - Compensation is stored as integer cents to avoid floating-point errors.
-- Foreign keys and checks reinforce service-level deletion and self-management rules.
+- Foreign keys and salary checks reinforce service-level dependency and compensation rules; tested service logic prevents self-management and reporting cycles.
 - Migration checksums detect edits to already-applied database history.
 - CI runs formatting, linting, type checking, coverage, MySQL integration, smoke, build, and dependency audit gates.
 - CodeQL and Dependabot continuously inspect the public repository.
