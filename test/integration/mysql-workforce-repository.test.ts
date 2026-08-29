@@ -26,6 +26,14 @@ describe.skipIf(!integrationEnabled)('MysqlWorkforceRepository', () => {
   afterAll(async () => {
     if (!pool) return;
     await pool.execute(
+      `UPDATE employees e
+       INNER JOIN roles r ON r.id = e.role_id
+       INNER JOIN departments d ON d.id = r.department_id
+       SET e.manager_id = NULL
+       WHERE d.name = ?`,
+      [departmentName],
+    );
+    await pool.execute(
       `DELETE e FROM employees e
        INNER JOIN roles r ON r.id = e.role_id
        INNER JOIN departments d ON d.id = r.department_id

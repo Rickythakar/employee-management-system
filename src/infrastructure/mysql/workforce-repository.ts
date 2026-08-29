@@ -243,7 +243,8 @@ export class MysqlWorkforceRepository implements WorkforceRepository {
         d.id AS department_id,
         d.name AS department_name,
         COUNT(e.id) AS employee_count,
-        COALESCE(SUM(r.salary_cents), 0) AS total_salary_cents
+        COALESCE(SUM(CASE WHEN e.id IS NULL THEN 0 ELSE r.salary_cents END), 0)
+          AS total_salary_cents
       FROM departments d
       LEFT JOIN roles r ON r.department_id = d.id
       LEFT JOIN employees e ON e.role_id = r.id
