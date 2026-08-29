@@ -1,24 +1,75 @@
 {
   "name": "employee-management-system",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "2.0.0",
+  "description": "A production-grade CLI for managing departments, roles, reporting lines, and workforce budgets.",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "workforce": "dist/cli.js"
   },
+  "files": [
+    "dist",
+    "db",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/cli.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "coverage": "vitest run --coverage",
+    "db:bootstrap": "tsx src/admin.ts bootstrap",
+    "db:migrate": "tsx src/admin.ts migrate",
+    "db:seed": "tsx src/admin.ts seed",
+    "db:health": "tsx src/admin.ts health",
+    "db:setup": "pnpm db:bootstrap && pnpm db:migrate && pnpm db:seed",
+    "smoke": "tsx src/admin.ts smoke",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "prepack": "pnpm build"
+  },
+  "keywords": [
+    "employee-management",
+    "mysql",
+    "typescript",
+    "cli",
+    "workforce"
+  ],
+  "author": "Ricky Thakar",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rickythakar/employee-management-system.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Rickythakar/employee-management-system/issues"
   },
   "homepage": "https://github.com/Rickythakar/employee-management-system#readme",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "packageManager": "pnpm@11.19.0",
   "dependencies": {
-    "console.table": "^0.10.0",
-    "inquirer": "^8.2.4",
-    "mysql2": "^2.3.3"
+    "@inquirer/prompts": "^8.7.0",
+    "dotenv": "^17.4.2",
+    "mysql2": "^3.24.2",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.3",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.9.1",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
   }
 }

@@ -1,0 +1,51 @@
+name: workforce-operations
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-employee_manager}
+      MYSQL_USER: ${DB_USER:-employee_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-local-development-password}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER --password=$$MYSQL_PASSWORD --silent',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+
+  app:
+    profiles: ['app']
+    build:
+      context: .
+      target: runtime
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-employee_app}
+      DB_PASSWORD: ${DB_PASSWORD:-local-development-password}
+      DB_NAME: ${DB_NAME:-employee_manager}
+      DB_CONNECTION_LIMIT: ${DB_CONNECTION_LIMIT:-10}
+    depends_on:
+      db:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  mysql-data:
