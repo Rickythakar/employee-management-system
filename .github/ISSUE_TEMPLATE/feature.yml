@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose an operator-focused improvement.
+title: 'feat: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Operator problem
+      description: What job is difficult today, and who experiences it?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the observable result rather than only an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: data
+    attributes:
+      label: Data, migration, and security impact
+      description: Note any new stored data, permissions, migration, or privacy considerations.

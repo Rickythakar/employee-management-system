@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a reproducible problem in the CLI, database lifecycle, or documentation.
+title: 'bug: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, production data, or security vulnerabilities.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest safe sequence of commands and prompts that reproduces the issue.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Runtime
+      options:
+        - Local Node.js
+        - Docker Compose
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Add relevant output with secrets and personal data removed.
