@@ -5,6 +5,7 @@ export default defineConfig({
     coverage: {
       exclude: [
         'test/**',
+        'src/admin.ts',
         'src/cli.ts',
         'src/cli/inquirer-prompt.ts',
         'src/cli/output-adapter.ts',
